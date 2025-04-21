@@ -13,42 +13,47 @@ namespace Library.eCommerce.Services
                 return items;
             }
         }
-        public static ShoppingCartService Current {  
+        public static ShoppingCartService Current
+        {
             get
             {
-                if(instance == null)
+                if (instance == null)
                 {
                     instance = new ShoppingCartService();
                 }
 
                 return instance;
-            } 
+            }
         }
         private static ShoppingCartService? instance;
-        private ShoppingCartService() { 
+        private ShoppingCartService()
+        {
             items = new List<Item>();
         }
 
         public Item? AddOrUpdate(Item item)
         {
             var existingInvItem = _prodSvc.GetById(item.Id);
-            if(existingInvItem == null || existingInvItem.Quantity == 0) {
+            if (existingInvItem == null || existingInvItem.Quantity == 0)
+            {
                 return null;
             }
 
             if (existingInvItem != null)
             {
                 existingInvItem.Quantity--;
+                _prodSvc.AddOrUpdate(existingInvItem);
             }
 
             var existingItem = CartItems.FirstOrDefault(i => i.Id == item.Id);
-            if(existingItem == null)
+            if (existingItem == null)
             {
                 //add
                 var newItem = new Item(item);
                 newItem.Quantity = 1;
                 CartItems.Add(newItem);
-            } else
+            }
+            else
             {
                 //update
                 existingItem.Quantity++;
@@ -70,12 +75,14 @@ namespace Library.eCommerce.Services
             {
                 itemToReturn.Quantity--;
                 var inventoryItem = _prodSvc.Products.FirstOrDefault(p => p.Id == itemToReturn.Id); ;
-                if(inventoryItem == null)
+                if (inventoryItem == null)
                 {
                     _prodSvc.AddOrUpdate(new Item(itemToReturn));
-                } else
+                }
+                else
                 {
                     inventoryItem.Quantity++;
+                    _prodSvc.AddOrUpdate(inventoryItem);
                 }
             }
 
@@ -83,5 +90,14 @@ namespace Library.eCommerce.Services
             return itemToReturn;
         }
 
+        public string GenerateReceipt()
+        {
+            return ReceiptGenerator.GenerateReceipt(CartItems);
+        }
+
+        public void FinalizeCheckout()
+        {
+            items.Clear();
+        }
     }
 }

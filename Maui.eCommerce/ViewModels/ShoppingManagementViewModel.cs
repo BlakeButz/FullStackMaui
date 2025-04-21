@@ -15,8 +15,10 @@ namespace Maui.eCommerce.ViewModels
     {
         private ProductServiceProxy _invSvc = ProductServiceProxy.Current;
         private ShoppingCartService _cartSvc = ShoppingCartService.Current;
-       public ItemViewModel? SelectedItem { get; set; }
-       public ItemViewModel? SelectedCartItem { get; set; }
+        public ItemViewModel? SelectedItem { get; set; }
+        public ItemViewModel? SelectedCartItem { get; set; }
+        public string? CartQuery { get; set; }
+
 
         public ObservableCollection<ItemViewModel?> Inventory
         {
@@ -32,9 +34,13 @@ namespace Maui.eCommerce.ViewModels
         {
             get
             {
-                return new ObservableCollection<ItemViewModel?>(_cartSvc.CartItems
-                    .Where(i => i?.Quantity > 0).Select(m => new ItemViewModel(m))
-                    );
+                return new ObservableCollection<ItemViewModel?>(
+                    _cartSvc.CartItems
+                        .Where(i =>
+                            i?.Quantity > 0 &&
+                            i?.Product?.Name?.ToLower().Contains(CartQuery?.ToLower() ?? string.Empty) == true)
+                        .Select(i => new ItemViewModel(i))
+                );
             }
         }
 
@@ -62,7 +68,8 @@ namespace Maui.eCommerce.ViewModels
                 var shouldRefresh = SelectedItem.Model.Quantity >= 1;
                 var updatedItem = _cartSvc.AddOrUpdate(SelectedItem.Model);
 
-                if(updatedItem != null && shouldRefresh) {
+                if (updatedItem != null && shouldRefresh)
+                {
                     NotifyPropertyChanged(nameof(Inventory));
                     NotifyPropertyChanged(nameof(ShoppingCart));
                 }
@@ -72,9 +79,10 @@ namespace Maui.eCommerce.ViewModels
 
         public void ReturnItem()
         {
-            if (SelectedCartItem != null) {
+            if (SelectedCartItem != null)
+            {
                 var shouldRefresh = SelectedCartItem.Model.Quantity >= 1;
-                
+
                 var updatedItem = _cartSvc.ReturnItem(SelectedCartItem.Model);
 
                 if (updatedItem != null && shouldRefresh)
@@ -84,5 +92,10 @@ namespace Maui.eCommerce.ViewModels
                 }
             }
         }
+        public void RefreshCart()
+        {
+            NotifyPropertyChanged(nameof(ShoppingCart));
+        }
+
     }
 }

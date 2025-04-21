@@ -1,9 +1,9 @@
-﻿using Library.eCommerce.DTO;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Library.eCommerce.DTO;
 
 namespace Spring2025_Samples.Models
 {
@@ -13,20 +13,15 @@ namespace Spring2025_Samples.Models
 
         public string? Name { get; set; }
 
+        public decimal Price { get; set; }
+
         public string? Display
         {
             get
             {
-                return $"{Id}. {Name}";
+                return $"{Id}. {Name} ${Price}";
             }
         }
-
-        public string LegacyProperty1 { get; set; }
-        public string LegacyProperty2 { get; set; }
-        public string LegacyProperty3 { get; set; }
-        public string LegacyProperty4 { get; set; }
-        public string LegacyProperty5 { get; set; }
-        public string LegacyProperty6 { get; set; }
 
         public Product()
         {
@@ -37,6 +32,7 @@ namespace Spring2025_Samples.Models
         {
             Name = p.Name;
             Id = p.Id;
+            Price = p.Price;
         }
 
         public override string ToString()
@@ -48,7 +44,7 @@ namespace Spring2025_Samples.Models
         {
             Name = p.Name;
             Id = p.Id;
-            LegacyProperty1 = string.Empty;
+            Price = p.Price;
         }
     }
 }

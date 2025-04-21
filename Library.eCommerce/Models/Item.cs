@@ -21,10 +21,14 @@ namespace Library.eCommerce.Models
             return $"{Product} Quantity:{Quantity}";
         }
 
-        public string Display { 
+        public string Display
+        {
             get
             {
-                return $"{Product?.Display ?? string.Empty} {Quantity}";
+                var name = Product?.Name ?? String.Empty;
+                var price = Product?.Price ?? 0;
+                var qty = Quantity ?? 0;
+                return $"{name} (x{qty}) - ${price:F2}";
             }
         }
 
@@ -40,8 +44,8 @@ namespace Library.eCommerce.Models
             Id = i.Id;
         }
 
-        
 
-        
+
+
     }
 }

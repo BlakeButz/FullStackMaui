@@ -14,6 +14,8 @@ namespace Maui.eCommerce.ViewModels
         public Item Model { get; set; }
 
         public ICommand? AddCommand { get; set; }
+        public ICommand? ReturnCommand { get; set; }
+
         private void DoAdd()
         {
             ShoppingCartService.Current.AddOrUpdate(Model);
@@ -22,6 +24,7 @@ namespace Maui.eCommerce.ViewModels
         void SetupCommands()
         {
             AddCommand = new Command(DoAdd);
+            ReturnCommand = new Command(DoReturn);
         }
 
         public ItemViewModel()
@@ -36,5 +39,10 @@ namespace Maui.eCommerce.ViewModels
             Model = model;
             SetupCommands();
         }
+        private void DoReturn()
+        {
+            ShoppingCartService.Current.ReturnItem(Model);
+        }
+
     }
 }

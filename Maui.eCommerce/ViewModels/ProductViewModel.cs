@@ -1,26 +1,16 @@
 ﻿using Library.eCommerce.Models;
 using Library.eCommerce.Services;
-using Spring2025_Samples.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Maui.eCommerce.ViewModels
 {
     public class ProductViewModel
     {
-        private Item? cachedModel { get; set; }
-        public string? Name { 
-            get
-            {
-                return Model?.Product?.Name ?? string.Empty;
-            }
-
+        public string? Name
+        {
+            get => Model?.Product?.Name ?? string.Empty;
             set
             {
-                if(Model != null && Model.Product?.Name != value)
+                if (Model?.Product != null && Model.Product.Name != value)
                 {
                     Model.Product.Name = value;
                 }
@@ -29,16 +19,24 @@ namespace Maui.eCommerce.ViewModels
 
         public int? Quantity
         {
-            get
-            {
-                return Model?.Quantity;
-            }
-
+            get => Model?.Quantity;
             set
             {
-                if( Model != null && Model.Quantity != value)
+                if (Model != null && Model.Quantity != value)
                 {
                     Model.Quantity = value;
+                }
+            }
+        }
+
+        public decimal Price
+        {
+            get => Model?.Product?.Price ?? 0;
+            set
+            {
+                if (Model?.Product != null && Model.Product.Price != value)
+                {
+                    Model.Product.Price = value;
                 }
             }
         }
@@ -52,11 +50,21 @@ namespace Maui.eCommerce.ViewModels
 
         public void Undo()
         {
-            ProductServiceProxy.Current.AddOrUpdate(cachedModel);
+            if (cachedModel != null)
+            {
+                ProductServiceProxy.Current.AddOrUpdate(new Item(cachedModel));
+            }
         }
 
-        public ProductViewModel() {
-            Model = new Item();
+        private Item? cachedModel;
+
+        public ProductViewModel()
+        {
+            Model = new Item
+            {
+                Product = new Library.eCommerce.DTO.ProductDTO(),
+                Quantity = 1
+            };
             cachedModel = null;
         }
 

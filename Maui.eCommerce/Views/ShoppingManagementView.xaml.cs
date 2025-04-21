@@ -4,11 +4,16 @@ namespace Maui.eCommerce.Views;
 
 public partial class ShoppingManagementView : ContentPage
 {
-	public ShoppingManagementView()
-	{
-		InitializeComponent();
-		BindingContext = new ShoppingManagementViewModel();
-	}
+    public ShoppingManagementView()
+    {
+        InitializeComponent();
+        BindingContext = new ShoppingManagementViewModel();
+    }
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        (BindingContext as ShoppingManagementViewModel)?.RefreshUX();
+    }
 
     private void RemoveFromCartClicked(object sender, EventArgs e)
     {
@@ -16,11 +21,25 @@ public partial class ShoppingManagementView : ContentPage
     }
     private void AddToCartClicked(object sender, EventArgs e)
     {
-		(BindingContext as ShoppingManagementViewModel).PurchaseItem();
+        (BindingContext as ShoppingManagementViewModel).PurchaseItem();
     }
 
     private void InlineAddClicked(object sender, EventArgs e)
     {
         (BindingContext as ShoppingManagementViewModel).RefreshUX();
     }
+    private void InlineRemoveClicked(object sender, EventArgs e)
+    {
+        (BindingContext as ShoppingManagementViewModel)?.RefreshUX();
+    }
+
+    private void CancelClicked(object sender, EventArgs e)
+    {
+        Shell.Current.GoToAsync("//MainPage");
+    }
+    private void SearchCartClicked(object sender, EventArgs e)
+    {
+        (BindingContext as ShoppingManagementViewModel)?.RefreshCart();
+    }
+
 }
