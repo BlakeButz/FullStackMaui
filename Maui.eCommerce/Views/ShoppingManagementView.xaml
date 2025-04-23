@@ -37,12 +37,16 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Text="{Binding Model.Id}"/>
-                                    <Label Grid.Column="1" Text="{Binding Model.Product.Name}"/>
-                                    <Label Grid.Column="2" Text="x"/>
-                                    <Label Grid.Column="3" Text="{Binding Model.Quantity}"/>
-                                    <Button Grid.Column="4" Text="+" Command="{Binding AddCommand}" Clicked="InlineAddClicked"/>
+                                    <Label Grid.Column="0" Text="{Binding Model.Id}" />
+                                    <Label Grid.Column="1" Text="{Binding Model.Product.Name}" />
+                                    <Label Grid.Column="2" Text="$" />
+                                    <Label Grid.Column="3" Text="{Binding Model.Product.Price}" />
+                                    <Label Grid.Column="4" Text="x" />
+                                    <Label Grid.Column="5" Text="{Binding Model.Quantity}" />
+                                    <Button Grid.Column="6" Text="+" Command="{Binding AddCommand}" Clicked="InlineAddClicked"/>
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>
@@ -72,12 +76,16 @@
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
                                         <ColumnDefinition/>
+                                        <ColumnDefinition/>
+                                        <ColumnDefinition/>
                                     </Grid.ColumnDefinitions>
-                                    <Label Grid.Column="0" Text="{Binding Model.Id}"/>
-                                    <Label Grid.Column="1" Text="{Binding Model.Product.Name}"/>
-                                    <Label Grid.Column="2" Text="x"/>
-                                    <Label Grid.Column="3" Text="{Binding Model.Quantity}"/>
-                                    <Button Grid.Column="4" Text="-" Command="{Binding ReturnCommand}" Clicked="InlineRemoveClicked"/>
+                                    <Label Grid.Column="0" Text="{Binding Model.Id}" />
+                                    <Label Grid.Column="1" Text="{Binding Model.Product.Name}" />
+                                    <Label Grid.Column="2" Text="$" />
+                                    <Label Grid.Column="3" Text="{Binding Model.Product.Price}" />
+                                    <Label Grid.Column="4" Text="x" />
+                                    <Label Grid.Column="5" Text="{Binding Model.Quantity}" />
+                                    <Button Grid.Column="6" Text="-" Command="{Binding ReturnCommand}" Clicked="InlineRemoveClicked" />
                                 </Grid>
                             </ViewCell>
                         </DataTemplate>

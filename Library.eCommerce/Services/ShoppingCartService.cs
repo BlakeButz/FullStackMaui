@@ -1,4 +1,10 @@
-﻿using Library.eCommerce.Models;
+﻿using Library.eCommerce.DTO;
+using Library.eCommerce.Models;
+using Library.eCommerce.Services;
+using Library.eCommerce.Utilities;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Library.eCommerce.Services
 {
@@ -6,13 +12,11 @@ namespace Library.eCommerce.Services
     {
         private ProductServiceProxy _prodSvc = ProductServiceProxy.Current;
         private List<Item> items;
-        public List<Item> CartItems
-        {
-            get
-            {
-                return items;
-            }
-        }
+
+        public List<Item> CartItems => items;
+
+        private static ShoppingCartService? instance;
+
         public static ShoppingCartService Current
         {
             get
@@ -25,10 +29,11 @@ namespace Library.eCommerce.Services
                 return instance;
             }
         }
-        private static ShoppingCartService? instance;
+
         private ShoppingCartService()
         {
-            items = new List<Item>();
+            var response = new WebRequestHandler().Get("/Cart").Result;
+            items = JsonConvert.DeserializeObject<List<Item>>(response) ?? new List<Item>();
         }
 
         public Item? AddOrUpdate(Item item)
@@ -39,65 +44,76 @@ namespace Library.eCommerce.Services
                 return null;
             }
 
-            if (existingInvItem != null)
-            {
-                existingInvItem.Quantity--;
-                _prodSvc.AddOrUpdate(existingInvItem);
-            }
+            existingInvItem.Quantity--;
+            _prodSvc.AddOrUpdate(existingInvItem);
 
-            var existingItem = CartItems.FirstOrDefault(i => i.Id == item.Id);
-            if (existingItem == null)
+            var localItem = items.FirstOrDefault(i => i.Id == item.Id);
+            if (localItem == null)
             {
-                //add
-                var newItem = new Item(item);
-                newItem.Quantity = 1;
-                CartItems.Add(newItem);
+                localItem = new Item(item) { Quantity = 1 };
+                items.Add(localItem);
             }
             else
             {
-                //update
-                existingItem.Quantity++;
+                localItem.Quantity++;
             }
 
-
+            PostDeltaToBackend(localItem.Product, 1);
             return existingInvItem;
         }
 
         public Item? ReturnItem(Item? item)
         {
-            if (item?.Id <= 0 || item == null)
-            {
-                return null;
-            }
+            if (item?.Id <= 0 || item == null) return null;
 
-            var itemToReturn = CartItems.FirstOrDefault(c => c.Id == item.Id);
-            if (itemToReturn != null)
+            var localItem = items.FirstOrDefault(c => c.Id == item.Id);
+            if (localItem != null)
             {
-                itemToReturn.Quantity--;
-                var inventoryItem = _prodSvc.Products.FirstOrDefault(p => p.Id == itemToReturn.Id); ;
+                localItem.Quantity--;
+
+                var inventoryItem = _prodSvc.Products.FirstOrDefault(p => p.Id == localItem.Id);
                 if (inventoryItem == null)
                 {
-                    _prodSvc.AddOrUpdate(new Item(itemToReturn));
+                    _prodSvc.AddOrUpdate(new Item(localItem));
                 }
                 else
                 {
                     inventoryItem.Quantity++;
                     _prodSvc.AddOrUpdate(inventoryItem);
                 }
+
+                if (localItem.Quantity <= 0)
+                {
+                    items.Remove(localItem);
+                }
+
+                PostDeltaToBackend(item.Product, -1);
             }
 
-
-            return itemToReturn;
-        }
-
-        public string GenerateReceipt()
-        {
-            return ReceiptGenerator.GenerateReceipt(CartItems);
+            return localItem;
         }
 
         public void FinalizeCheckout()
         {
             items.Clear();
+            new WebRequestHandler().Post("/Cart/clear", new { }).Wait();
+        }
+
+        public string GenerateReceipt()
+        {
+            return ReceiptGenerator.GenerateReceipt(items);
+        }
+
+        private void PostDeltaToBackend(ProductDTO product, int delta)
+        {
+            var payload = new Item
+            {
+                Id = product.Id,
+                Product = new ProductDTO(product) { Id = product.Id },
+                Quantity = delta
+            };
+
+            new WebRequestHandler().Post("/Cart", payload).Wait();
         }
     }
 }

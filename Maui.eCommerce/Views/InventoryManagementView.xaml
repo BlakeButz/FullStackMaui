@@ -3,8 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Maui.eCommerce.Views.InventoryManagementView"
              Title="InventoryManagementView"
-             NavigatedTo="ContentPage_NavigatedTo"
-             >
+             NavigatedTo="ContentPage_NavigatedTo">
     <VerticalStackLayout>
         <Grid>
             <Grid.ColumnDefinitions>
@@ -28,25 +27,16 @@
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
                             <Label Grid.Column="0" Text="{Binding Display}" />
-                            <Button Grid.Column="1" Text="Edit"/>
-                            <Button Grid.Column="2" Text="Delete"/>
+                            <Button Grid.Column="1" Text="Edit" Clicked="InlineEditClicked" />
+                            <Button Grid.Column="2" Text="Delete" Clicked="InlineDeleteClicked" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
         <Button Text="Add" Clicked="AddClicked"/>
-        <Button
-      Text="Edit"
-         Clicked="EditClicked"
-      />
-        <Button
-      Text="Delete"
-      Clicked="DeleteClicked"
-      />
-        <Button
-            Text="Go Back"
-            Clicked="CancelClicked"
-            />
+        <Button Text="Edit" Clicked="EditClicked"/>
+        <Button Text="Delete" Clicked="DeleteClicked"/>
+        <Button Text="Go Back" Clicked="CancelClicked"/>
     </VerticalStackLayout>
 </ContentPage>

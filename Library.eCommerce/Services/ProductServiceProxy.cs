@@ -13,7 +13,7 @@ namespace Library.eCommerce.Services
         }
 
         private static ProductServiceProxy? instance;
-        private static object instanceLock = new object();
+        private static readonly object instanceLock = new();
 
         public static ProductServiceProxy Current
         {
@@ -33,17 +33,36 @@ namespace Library.eCommerce.Services
 
         public List<Item> Products { get; private set; }
 
-        private int LastKey => Products.Any() ? Products.Select(p => p.Id).Max() : 0;
-
         public Item AddOrUpdate(Item item)
         {
-            if (item.Id == 0)
+            var response = new WebRequestHandler().Post("/Inventory", item).Result;
+            var newItem = JsonConvert.DeserializeObject<Item>(response);
+
+            if (newItem == null)
             {
-                item.Id = LastKey + 1;
-                Products.Add(item);
+                return item;
             }
 
-            return item;
+            // Ensure the Product ID matches the Item ID
+            if (newItem.Product != null)
+            {
+                newItem.Product.Id = newItem.Id;
+            }
+
+            if (item.Id == 0)
+            {
+                Products.Add(newItem);
+            }
+            else
+            {
+                var index = Products.FindIndex(p => p.Id == newItem.Id);
+                if (index >= 0)
+                {
+                    Products[index] = newItem;
+                }
+            }
+
+            return newItem;
         }
 
         public Item? Delete(int id)
@@ -53,13 +72,19 @@ namespace Library.eCommerce.Services
                 return null;
             }
 
-            var item = Products.FirstOrDefault(p => p.Id == id);
-            if (item != null)
+            var result = new WebRequestHandler().Delete($"/Inventory/{id}").Result;
+            var deletedItem = JsonConvert.DeserializeObject<Item>(result);
+
+            if (deletedItem != null)
             {
-                Products.Remove(item);
+                var existing = Products.FirstOrDefault(p => p.Id == id);
+                if (existing != null)
+                {
+                    Products.Remove(existing);
+                }
             }
 
-            return item;
+            return deletedItem;
         }
 
         public Item? GetById(int id)

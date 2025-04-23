@@ -1,0 +1,35 @@
+[
+  {
+    "Id": 5,
+    "Product": {
+      "Id": 5,
+      "Name": "coffee",
+      "Price": 10.0,
+      "Display": "5. coffee. $10.0"
+    },
+    "Quantity": 11,
+    "Display": "coffee (x11) - $10.00"
+  },
+  {
+    "Id": 4,
+    "Product": {
+      "Id": 4,
+      "Name": "matcha",
+      "Price": 10.0,
+      "Display": "4. matcha. $10.0"
+    },
+    "Quantity": 7,
+    "Display": "matcha (x7) - $10.00"
+  },
+  {
+    "Id": 1,
+    "Product": {
+      "Id": 1,
+      "Name": "Product 1 WEB",
+      "Price": 10.99,
+      "Display": "1. Product 1 WEB. $10.99"
+    },
+    "Quantity": 11,
+    "Display": "Product 1 WEB (x11) - $10.99"
+  }
+]
