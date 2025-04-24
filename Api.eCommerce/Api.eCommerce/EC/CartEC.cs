@@ -22,7 +22,7 @@ namespace Api.eCommerce.EC
             else if (item.Quantity > 0)
             {
                 // Ensure product info is pulled from inventory
-                var inventoryItem = FakeDatabase.Inventory.FirstOrDefault(i => i.Id == item.Id);
+                var inventoryItem = InventoryDatabase.Inventory.FirstOrDefault(i => i.Id == item.Id);
                 if (inventoryItem != null)
                 {
                     item.Product = inventoryItem.Product;

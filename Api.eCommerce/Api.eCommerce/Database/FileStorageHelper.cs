@@ -22,7 +22,6 @@ namespace Api.eCommerce.Database
 
         public static void SaveInventory(List<Item?> inventory)
         {
-            Console.WriteLine("Saving inventory to: " + Path.GetFullPath(filePath));
             var json = JsonConvert.SerializeObject(inventory, Newtonsoft.Json.Formatting.Indented);
             File.WriteAllText(filePath, json);
         }

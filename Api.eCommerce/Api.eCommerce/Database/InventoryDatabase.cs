@@ -3,11 +3,11 @@ using Library.eCommerce.Models;
 
 namespace Api.eCommerce.Database
 {
-    public static class FakeDatabase
+    public static class InventoryDatabase
     {
         private static List<Item?> inventory;
 
-        static FakeDatabase()
+        static InventoryDatabase()
         {
             inventory = FileStorageHelper.LoadInventory();
 

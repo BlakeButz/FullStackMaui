@@ -1,13 +1,24 @@
 [
   {
-    "Id": 1,
+    "Id": 6,
     "Product": {
-      "Id": 1,
-      "Name": "Product 1 WEB",
-      "Price": 10.99,
-      "Display": "1. Product 1 WEB. $10.99"
+      "Id": 6,
+      "Name": "Pita",
+      "Price": 22.99,
+      "Display": "6. Pita. $22.99"
+    },
+    "Quantity": 4,
+    "Display": "Pita (x4) - $22.99"
+  },
+  {
+    "Id": 7,
+    "Product": {
+      "Id": 7,
+      "Name": "eggs",
+      "Price": 10187364.12,
+      "Display": "7. eggs. $10187364.12"
     },
     "Quantity": 1,
-    "Display": "Product 1 WEB (x1) - $10.99"
+    "Display": "eggs (x1) - $10187364.12"
   }
 ]

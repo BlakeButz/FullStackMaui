@@ -7,7 +7,7 @@ namespace Api.eCommerce.EC
     {
         public List<Item?> Get()
         {
-            return FakeDatabase.Inventory;
+            return InventoryDatabase.Inventory;
         }
 
         public Item? AddOrUpdate(Item item)
@@ -19,30 +19,30 @@ namespace Api.eCommerce.EC
 
             if (item.Id == 0)
             {
-                item.Id = FakeDatabase.LastKey_Item + 1;
-                FakeDatabase.Inventory.Add(item);
+                item.Id = InventoryDatabase.LastKey_Item + 1;
+                InventoryDatabase.Inventory.Add(item);
             }
             else
             {
-                var existing = FakeDatabase.Inventory.FirstOrDefault(p => p?.Id == item.Id);
+                var existing = InventoryDatabase.Inventory.FirstOrDefault(p => p?.Id == item.Id);
                 if (existing != null)
                 {
-                    FakeDatabase.Inventory.Remove(existing);
+                    InventoryDatabase.Inventory.Remove(existing);
                 }
-                FakeDatabase.Inventory.Add(item);
+                InventoryDatabase.Inventory.Add(item);
             }
 
-            FakeDatabase.SaveChanges();
+            InventoryDatabase.SaveChanges();
             return item;
         }
 
         public Item? Delete(int id)
         {
-            var toDelete = FakeDatabase.Inventory.FirstOrDefault(p => p?.Id == id);
+            var toDelete = InventoryDatabase.Inventory.FirstOrDefault(p => p?.Id == id);
             if (toDelete != null)
             {
-                FakeDatabase.Inventory.Remove(toDelete);
-                FakeDatabase.SaveChanges();
+                InventoryDatabase.Inventory.Remove(toDelete);
+                InventoryDatabase.SaveChanges();
             }
             return toDelete;
         }
